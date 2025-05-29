@@ -44,7 +44,7 @@
 ## 🔐 Authentication API
 
 ### ✅ Signup  
-`POST /api/auth/signup`  
+`POST /api/v1/users/signup`  
 ```json
 {
   "name": "John Doe",
@@ -65,7 +65,7 @@ Returns: HTTP-only cookie with JWT
 
 📦 Subscription API
 📄 Create Subscription
-POST /api/subscription/create
+POST /api/v1/users/subscriptions
 
 json
 Copy
@@ -74,20 +74,19 @@ Edit
   "planName": "Basic"
 }
 📑 Get Active Subscriptions
-GET /api/subscription/get
+GET /api/v1/subscriptions
 
 ✏️ Update Subscription
-PATCH /api/subscription/update
+PATCH /api/v1/subscriptions
 
 json
 Copy
 Edit
 {
-  "planName": "Pro",
   "status": "ACTIVE"
 }
 ❌ Cancel Subscription
-DELETE /api/subscription/cancel
+DELETE /api/v1/users/subscriptions
 
 json
 Copy
