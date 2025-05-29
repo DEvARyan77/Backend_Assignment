@@ -52,7 +52,7 @@
   "password": "password123"
 }
 
-POST /api/auth/login
+POST /api/v1/users/login
 
 json
 Copy
