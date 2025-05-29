@@ -6,7 +6,7 @@
 - 🔐 Customer Authentication (Signup & Login with JWT & Cookies)
 - 📋 Plan-based Subscriptions (Create, Get, Update, Cancel)
 - ⏰ Scheduled Cron Job to expire subscriptions daily at midnight
-- 🔁 MongoDB (with Mongoose) + Redis (for retry logic)
+- 🔁 MongoDB (with Mongoose) + Redis + Retry logic
 
 ---
 
