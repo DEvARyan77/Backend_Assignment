@@ -1,143 +1,70 @@
+# 🧠 Subscription Management API
+
+A RESTful backend API for managing customer subscriptions, built with **Express.js**, **MongoDB**, **Zod**, and **JWT authentication**. It supports both **customer** and **admin** operations with scheduled subscription expiration logic.
+
+## 🌐 Deployment URLs
+
+- **Customer API Base URL:** `https://backend-assignment-uh4k.onrender.com/api/v1/users`
+- **Admin API Base URL:** `https://backend-assignment-uh4k.onrender.com/api/v1/admin`
+- **Cron Job (Vercel):** `/api/v1/cron/expire-subscriptions` (runs daily)
 
 ---
 
-## 📁 Features
+## 🚀 Features
 
-- 🔐 Customer Authentication (Signup & Login with JWT & Cookies)
-- 📋 Plan-based Subscriptions (Create, Get, Update, Cancel)
-- ⏰ Scheduled Cron Job to expire subscriptions daily at midnight
-- 🔁 MongoDB (with Mongoose) + Redis + Retry logic
+### 👤 Customer APIs
+- `POST /signup` – Register a new customer
+- `POST /login` – Login and receive a JWT token
+- `POST /subscriptions` – Create a subscription
+- `GET /subscriptions` – Fetch active subscriptions
+- `PUT /subscriptions` – Update subscription status
+- `DELETE /subscriptions` – Cancel a subscription
 
----
-
-## 🛠 Tech Stack
-
-- Node.js / Express.js
-- MongoDB + Mongoose
-- Redis (for retry logic)
-- JWT Authentication
-- Vercel Serverless Deployment
-- Vercel Cron Jobs
+> All subscription routes require authentication via JWT.
 
 ---
 
-## 📂 Project Structure
+### 🛠️ Admin APIs
+- `POST /login` – Login as admin (no signup)
+- `POST /plans` – Create a new plan
+- `GET /plans` – Fetch all plans
+- `GET /plans/:id` – Fetch a specific plan by ID
+- `GET /plans/name/:planName` – Fetch a plan by name
 
-.
-├── cluster.js # Express app entry point
-├── models/
-│ ├── customer.js
-│ ├── plan.js
-│ └── subscription.js
-├── routes/
-│ ├── auth.js
-│ └── subscription.js
-├── utils/
-│ └── retry.js
-├── vercel.json # Vercel routing & cron config
-├── .env # Environment variables (ignored)
-└── README.md
-
+> All admin routes require admin-level JWT authentication.
 
 ---
 
-## 🔐 Authentication API
+## ✅ Technologies Used
 
-### ✅ Signup  
-`POST /api/v1/users/signup`  
-```json
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "password123"
-}
+- **Node.js + Express.js** – Web server
+- **MongoDB + Mongoose** – Database
+- **Zod** – Schema validation
+- **JWT** – Authentication
+- **Redis** (optional) – Caching/session support
+- **Vercel + Render** – Hosting and scheduled cron jobs
 
-POST /api/v1/users/login
+---
 
-json
-Copy
-Edit
-{
-  "email": "john@example.com",
-  "password": "password123"
-}
-Returns: HTTP-only cookie with JWT
+## 🧪 Validation
 
-📦 Subscription API
-📄 Create Subscription
-POST /api/v1/users/subscriptions
+### Zod Schemas
 
-json
-Copy
-Edit
-{
-  "planName": "Basic"
-}
-📑 Get Active Subscriptions
-GET /api/v1/subscriptions
+- **Customer**
+  - `signupSchema` – Validates name, email, and password
+  - `loginSchema` – Validates email and password
+- **Subscription**
+  - `createSubscriptionSchema` – Requires `planName`
+  - `updateSubscriptionSchema` – Requires `planName` + `status`
+  - `cancelSubscriptionSchema` – Requires `planName`
+- **Plan (Admin)**
+  - `createPlanSchema` – Validates name, price, duration, and features
 
-✏️ Update Subscription
-PATCH /api/v1/subscriptions
+---
 
-json
-Copy
-Edit
-{
-  "status": "ACTIVE"
-}
-❌ Cancel Subscription
-DELETE /api/v1/users/subscriptions
+## 🔒 Authentication
 
-json
-Copy
-Edit
-{
-  "planName": "Basic"
-}
-⏰ Cron Job (Auto Expiry)
-Defined in vercel.json as:
+Add the JWT token to the `Authorization` header:
 
-json
-Copy
-Edit
-"crons": [
-  {
-    "path": "/api/v1/cron/expire-subscriptions",
-    "schedule": "0 0 * * *"
-  }
-]
-This runs /api/v1/cron/expire-subscriptions daily at midnight (UTC) to automatically expire outdated subscriptions.
-
-🔧 Environment Variables (.env)
-ini
-Copy
-Edit
-MONGO_URI=your_mongodb_uri
-REDIS_URL=your_redis_url
-SECRET_KEY=your_jwt_secret
-Note: These are kept secret via .gitignore.
-
-🧪 Local Development
-bash
-Copy
-Edit
-npm install
-node cluster.js
-Runs Express locally on http://localhost:3000
-
-⚙️ Deployment on Vercel
-The entry point is set in vercel.json:
-
-json
-Copy
-Edit
-"builds": [
-  { "src": "cluster.js", "use": "@vercel/node" }
-],
-"routes": [
-  { "src": "/api/(.*)", "dest": "cluster.js" }
-]
-All API routes are routed through cluster.js.
-
-🙋‍♂️ Author
-Dev Aryan
+```http
+Authorization: Bearer <your_token_here>
